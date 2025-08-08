@@ -118,7 +118,7 @@
         <div class="login-card">
             <div class="text-center mb-4">
                 <a href="{{ route('home') }}">
-                    <img class="logo-site" src="{{ asset('assets/images/logo/logo-fociloans.png') }}" alt="FOCI Loans">
+                    <img class="logo-site" src="{{ asset('assets/images/logo/logo-site.png') }}" alt="FOCI Loans">
                 </a>
                 <h1 class="login-title">Admin Login</h1>
             </div>

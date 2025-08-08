@@ -15,15 +15,15 @@
     <meta property="og:description" content="@yield('decription', '')">
     <meta property="og:url" content="{{ url()->full() }}">
     <meta property="og:site_name" content="fociloans">
-    <meta property="og:image" content="{{ asset('assets/images/logo/logo-fociloans.png') }}">
-    <meta property="og:image:secure_url" content="{{ asset('assets/images/logo/logo-fociloans.png') }}">
+    <meta property="og:image" content="{{ asset('assets/images/logo/logo-site.png') }}">
+    <meta property="og:image:secure_url" content="{{ asset('assets/images/logo/logo-site.png') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="@yield('title', 'Trang chủ - fociloans')">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="@yield('title', 'Trang chủ - fociloans')">
     <meta name="twitter:description" content="@yield('decription', '')">
-    <meta name="twitter:image" content="{{ asset('assets/images/logo/logo-fociloans.png') }}">
+    <meta name="twitter:image" content="{{ asset('assets/images/logo/logo-site.png') }}">
     <meta name="twitter:image:alt" content="@yield('title', 'Trang chủ - fociloans')">
     <link rel="icon" href="{{ asset('assets/images/logo/favicon.ico') }}" type="image/png/x-icon">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -35,7 +35,7 @@
           "@context": "https://schema.org",
           "@type": "Organization",
           "url": "{{ url('/') }}",
-          "logo": "{{ asset('assets/images/logo/logo-fociloans.png')}}"
+          "logo": "{{ asset('assets/images/logo/logo-site.png')}}"
         }
     </script>
 
@@ -61,7 +61,7 @@
             <nav class="navbar navbar-expand-lg py-2">
                 <div class="container-fluid px-0">
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        <img class="logo-site" src="{{ asset('assets/images/logo/logo-fociloans.png') }}"
+                        <img class="logo-site" src="{{ asset('assets/images/logo/logo-site.png') }}"
                             alt="Fociloans" height="20">
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

@@ -5,7 +5,7 @@
             <div class="col-md-6 mb-4 mb-md-0">
                 <div class="footer-logo">
                     <a href="{{ url('/') }}" class="text-decoration-none">
-                        <img src="{{ asset('assets/images/logo/logo-fociloans.png') }}" alt="Fociloans" height="50">
+                        <img src="{{ asset('assets/images/logo/logo-site.png') }}" alt="Fociloans" height="50">
                     </a>
 
                 </div>

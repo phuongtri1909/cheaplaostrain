@@ -4,7 +4,7 @@
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
         <a class="d-flex m-0 justify-content-center text-wrap" href="{{ route('home') }}">
-            <img height="60" class="logo-site" src="{{ asset('assets/images/logo/logo-fociloans.png') }}"
+            <img height="60" class="logo-site" src="{{ asset('assets/images/logo/logo-site.png') }}"
                 alt="logo-site">
         </a>
     </div>

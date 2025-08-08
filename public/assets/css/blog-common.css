@@ -1,0 +1,125 @@
+/* Blog Common Styles */
+:root {
+    --blog-transition-fast: 0.3s ease;
+    --blog-transition-smooth: 0.5s ease;
+    --blog-transition-slow: 0.8s ease;
+}
+
+/* Sidebar - Clean style */
+.sidebar-section {
+    background: var(--warm-white);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.sidebar-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-icon {
+    color: var(--primary-green);
+    font-size: 1.1rem;
+}
+
+.sidebar-blog-item {
+    display: flex;
+    gap: 15px;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--accent-green);
+    text-decoration: none;
+    transition: var(--blog-transition-fast);
+}
+
+.sidebar-blog-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.sidebar-blog-item:hover {
+    background: var(--accent-green);
+    margin: 0 -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.sidebar-blog-image {
+    width: 70px;
+    height: 70px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.sidebar-blog-content h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-blog-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+/* CTA Section - Clean style */
+.cta-section {
+    background: var(--primary-green);
+    color: white;
+    padding: 3rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.cta-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.cta-text {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.cta-button {
+    background: white;
+    color: var(--primary-green);
+    padding: 12px 30px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--blog-transition-smooth);
+}
+
+.cta-button:hover {
+    background: var(--accent-green);
+    color: var(--primary-green);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar-section {
+        padding: 1.5rem;
+    }
+    
+    .cta-section {
+        padding: 2rem;
+    }
+    
+    .cta-title {
+        font-size: 1.5rem;
+    }
+}

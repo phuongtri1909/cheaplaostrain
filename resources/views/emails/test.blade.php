@@ -1,4 +1,3 @@
-<!-- filepath: d:\fociloans\resources\views\emails\test.blade.php -->
 <!DOCTYPE html>
 <html>
 <head>

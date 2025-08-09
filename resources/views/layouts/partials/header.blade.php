@@ -6,25 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>@yield('title', 'Trang chủ - fociloans')</title>
+    <title>@yield('title', 'Trang chủ - Cheap Laos Train')</title>
     <meta name="description" content="@yield('description', '')">
     <meta name="keywords" content="@yield('keywords', '')">
     <meta name="robots" content="index,follow">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="@yield('title', 'Trang chủ - fociloans')">
+    <meta property="og:title" content="@yield('title', 'Trang chủ - Cheap Laos Train')">
     <meta property="og:description" content="@yield('decription', '')">
     <meta property="og:url" content="{{ url()->full() }}">
-    <meta property="og:site_name" content="fociloans">
+    <meta property="og:site_name" content="Cheap Laos Train">
     <meta property="og:image" content="{{ asset('assets/images/logo/logo-site.png') }}">
     <meta property="og:image:secure_url" content="{{ asset('assets/images/logo/logo-site.png') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="@yield('title', 'Trang chủ - fociloans')">
+    <meta property="og:image:alt" content="@yield('title', 'Trang chủ - Cheap Laos Train')">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', 'Trang chủ - fociloans')">
+    <meta name="twitter:title" content="@yield('title', 'Trang chủ - Cheap Laos Train')">
     <meta name="twitter:description" content="@yield('decription', '')">
     <meta name="twitter:image" content="{{ asset('assets/images/logo/logo-site.png') }}">
-    <meta name="twitter:image:alt" content="@yield('title', 'Trang chủ - fociloans')">
+    <meta name="twitter:image:alt" content="@yield('title', 'Trang chủ - Cheap Laos Train')">
     <link rel="icon" href="{{ asset('assets/images/logo/favicon.ico') }}" type="image/png/x-icon">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.ico') }}" type="image/x-icon">
@@ -61,76 +61,45 @@
             <nav class="navbar navbar-expand-lg py-2">
                 <div class="container-fluid px-0">
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        <img class="logo-site" src="{{ asset('assets/images/logo/logo-site.png') }}"
-                            alt="Fociloans" height="20">
+                        <img class="logo-site" src="{{ asset('assets/images/logo/logo-site.png') }}" alt="Cheap Laos Train"
+                            height="20">
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
                         aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
-                        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <div class="collapse navbar-collapse" id="navbarContent">
+                        <!-- Navigation links -->
+                        <ul class="navbar-nav mx-auto">
                             <li class="nav-item">
-                                <a class="nav-link fw-bold font-header fs-4-5"
-                                    href="{{ route('tickets.search') }}">Book Ticket</a>
+                                <a class="nav-link" href="{{ route('home') }}">HOME</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('home') }}">ORDERS</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link fw-bold font-header fs-4-5"
-                                    href="{{ route('home') }}">Orders</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link fw-bold font-header fs-4-5"
-                                    href="{{ route('faq') }}">{{ __('FAQ') }}</a>
+                                <a class="nav-link" href="{{ route('faq') }}">FAQ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link fw-bold font-header fs-4-5"
-                                    href="{{ route('blogs') }}">{{ __('News') }}</a>
+                                <a class="nav-link" href="{{ route('blogs') }}">NEWS</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link fw-bold font-header fs-4-5"
-                                    href="{{ route('about.us') }}">{{ __('Contact Us') }}</a>
+                                <a class="nav-link" href="{{ route('about.us') }}">{{ __('CONTACT US') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link fw-bold font-header fs-4-5"
-                                    href="{{ route('about.us') }}">{{ __('About Us') }}</a>
+                                <a class="nav-link" href="{{ route('about.us') }}">{{ __('ABOUT US') }}</a>
                             </li>
-
-
                         </ul>
 
-                        {{-- <div class="d-flex align-items-center">
-                            <div class="language-switcher">
-                                <div class="language-current" id="languageToggle">
-                                    @if (app()->getLocale() == 'en')
-                                        <img src="{{ asset('assets/images/flags/en.webp') }}" alt="English"
-                                            class="lang-flag" width="18">
-                                        <span>EN</span>
-                                    @else
-                                        <img src="{{ asset('assets/images/flags/vi.webp') }}" alt="Tiếng Việt"
-                                            class="lang-flag" width="18">
-                                        <span>VI</span>
-                                    @endif
-                                    <i class="fas fa-chevron-down lang-arrow"></i>
-                                </div>
-                                <div class="language-dropdown" id="languageDropdown">
-                                    <a href="{{ route('language.switch', 'en') }}"
-                                        class="language-option {{ app()->getLocale() == 'en' ? 'active' : '' }}">
-                                        <img src="{{ asset('assets/images/flags/en.webp') }}" alt="English"
-                                            class="lang-flag" width="18">
-                                        <span>{{ __('English') }}</span>
-                                    </a>
-                                    <a href="{{ route('language.switch', 'vi') }}"
-                                        class="language-option {{ app()->getLocale() == 'vi' ? 'active' : '' }}">
-                                        <img src="{{ asset('assets/images/flags/vi.webp') }}" alt="Tiếng Việt"
-                                            class="lang-flag" width="18">
-                                        <span>{{ __('Vietnamese') }}</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div> --}}
+                        <!-- Book Ticket Button -->
+                        <div class="d-flex">
+                            <a href="{{ route('tickets.search') }}"
+                                class="btn-book-ticket btn btn-md rounded-4 btn-dark">
+                                Book Ticket
+                            </a>
+                        </div>
                     </div>
                 </div>
             </nav>

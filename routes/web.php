@@ -39,9 +39,15 @@ Route::get('sitemap-loan-programs.xml', [SitemapController::class, 'loanPrograms
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/tickets', [TicketController::class, 'search'])->name('tickets.search');
-Route::get('/tickets/select-seat/{ticket}', [TicketController::class, 'selectSeat'])->name('tickets.select-seat');
+
+// Ticket Routes
+Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+Route::get('/tickets/seat-map', [TicketController::class, 'getSeatMap'])->name('tickets.seat-map');
 Route::post('/tickets/book', [TicketController::class, 'book'])->name('tickets.book');
+
+// Legacy routes for compatibility
+Route::get('/tickets/search', [TicketController::class, 'search'])->name('tickets.search');
+Route::get('/tickets/select-seat/{ticket}', [TicketController::class, 'selectSeat'])->name('tickets.select-seat');
 
 Route::get('about-us', [AboutUsController::class, 'index'])->name('about.us');
 

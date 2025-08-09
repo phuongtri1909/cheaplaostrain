@@ -1,4 +1,3 @@
-<!-- filepath: d:\fociloans\resources\views\admin\pages\smtp-setting\edit.blade.php -->
 @extends('admin.layouts.app')
 
 @section('content-auth')

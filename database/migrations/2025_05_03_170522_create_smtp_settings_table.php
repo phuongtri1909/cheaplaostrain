@@ -48,7 +48,7 @@ return new class extends Migration
             'username' => env('MAIL_USERNAME', ''),
             'password' => env('MAIL_PASSWORD', ''),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'from_address' => env('MAIL_FROM_ADDRESS', 'noreply@fociloans.com'),
+            'from_address' => env('MAIL_FROM_ADDRESS', 'noreply@cheaplaostrain.com'),
             'from_name' => env('MAIL_FROM_NAME', config('app.name')),
             'is_active' => true,
             'created_at' => now(),

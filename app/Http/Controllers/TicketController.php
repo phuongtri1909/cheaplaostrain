@@ -6,14 +6,13 @@ use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
-    public function search(Request $request)
+    public function index(Request $request)
     {
         // Mock data for demonstration
         $searchParams = [
-            'departure' => $request->get('departure', 'Vientiane'),
-            'arrival' => $request->get('arrival', 'Vang Vieng'),
+            'departure' => $request->get('from', 'Vientiane'),
+            'arrival' => $request->get('to', 'Vang Vieng'),
             'date' => $request->get('date', date('Y-m-d', strtotime('+1 day'))),
-            'select_date' => $request->get('selectDate', date('Y-m-d', strtotime('+1 day')))
         ];
 
         // Mock train data
@@ -59,30 +58,52 @@ class TicketController extends Controller
             ]
         ];
 
-        return view('pages.tickets.search', compact('searchParams', 'trains'));
+        return view('pages.tickets.ticket-list', compact('searchParams', 'trains'));
     }
 
-    public function selectSeat(Request $request, $ticketId)
+    public function getSeatMap(Request $request)
     {
-        // Mock ticket data
-        $ticket = [
-            'id' => $ticketId,
-            'train_number' => 'C1',
-            'departure' => 'Vientiane',
-            'arrival' => 'Vang Vieng',
-            'departure_time' => '08:00',
-            'arrival_time' => '09:30',
-            'date' => '2025-08-15',
-            'class' => $request->get('class', '2nd'),
-            'price' => $request->get('class', '2nd') == '2nd' ? 25000 : 45000
-        ];
+        $trainId = $request->get('train_id');
+        $class = $request->get('class');
 
-        return view('pages.tickets.select-seat', compact('ticket'));
+        // Mock seat data - in real app, fetch from database
+        $occupiedSeats = ['1A', '1B', '3C', '5A', '7B', '9D'];
+
+        return response()->json([
+            'occupied_seats' => $occupiedSeats,
+            'total_seats' => 40,
+            'available_seats' => 40 - count($occupiedSeats)
+        ]);
     }
 
     public function book(Request $request)
     {
-        // Handle booking logic here
-        return redirect()->route('tickets.search')->with('success', 'Ticket booked successfully!');
+        // Validate booking data
+        $validated = $request->validate([
+            'train_id' => 'required|integer',
+            'class' => 'required|in:1st,2nd',
+            'seats' => 'required|array|min:1|max:4',
+            'total_price' => 'required|numeric|min:0',
+        ]);
+
+        // In real application, save booking to database
+        // Create booking record, send confirmation email, etc.
+
+        return response()->json([
+            'success' => true,
+            'booking_id' => 'LAO' . time(),
+            'message' => 'Booking confirmed successfully!'
+        ]);
+    }
+
+    // Keep legacy methods for compatibility
+    public function search(Request $request)
+    {
+        return $this->index($request);
+    }
+
+    public function selectSeat(Request $request, $ticketId)
+    {
+        return redirect()->route('tickets.index')->with('train_id', $ticketId);
     }
 }

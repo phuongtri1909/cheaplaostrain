@@ -90,11 +90,6 @@ Route::resource('tickets', TicketController::class);
 
 Route::resource('schedules', ScheduleController::class);
 
-Route::resource('schedule-prices', SchedulePriceController::class);
-
-Route::resource('segment-prices', SegmentPriceController::class);
-
-Route::resource('route-segments', RouteSegmentController::class);
+Route::resource('schedule-prices', SchedulePriceController::class);;
 
 Route::resource('train-seat-classes', TrainSeatClassController::class);
-Route::resource('train-stops', TrainStopController::class);

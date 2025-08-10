@@ -4,8 +4,7 @@
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
         <a class="d-flex m-0 justify-content-center text-wrap" href="{{ route('home') }}">
-            <img height="60" class="logo-site" src="{{ asset('assets/images/logo/logo-site.png') }}"
-                alt="logo-site">
+            <img height="60" class="logo-site" src="{{ asset('assets/images/logo/logo-site.png') }}" alt="logo-site">
         </a>
     </div>
     <hr class="horizontal dark mt-0">
@@ -105,7 +104,8 @@
             <li class="nav-item">
                 <a class="nav-link {{ Route::currentRouteNamed('admin.about-us.*') ? 'active' : '' }}"
                     href="{{ route('admin.about-us.index') }}">
-                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fa-solid fa-info-circle text-dark icon-sidebar"></i>
                     </div>
                     <span class="nav-link-text ms-1">About Us</span>
@@ -126,6 +126,94 @@
                     <span class="nav-link-text ms-1">Quản lý ngôn ngữ</span>
                 </a>
             </li> --}}
+
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteNamed('admin.countries.*') ? 'active' : '' }}"
+                    href="{{ route('admin.countries.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-flag text-dark icon-sidebar"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Quốc gia</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteNamed('admin.administrative-units.*') ? 'active' : '' }}"
+                    href="{{ route('admin.administrative-units.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-building text-dark icon-sidebar"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Đơn vị</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteNamed('admin.stations.*') ? 'active' : '' }}"
+                    href="{{ route('admin.stations.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-train text-dark icon-sidebar"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Ga tàu</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteNamed('admin.seat-classes.*') ? 'active' : '' }}"
+                    href="{{ route('admin.seat-classes.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-chair text-dark icon-sidebar"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Hạng ghế</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteNamed('admin.routes.*') ? 'active' : '' }}"
+                    href="{{ route('admin.routes.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-route text-dark icon-sidebar"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Tuyến đường</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteNamed('admin.trains.*') ? 'active' : '' }}"
+                    href="{{ route('admin.trains.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-train text-dark icon-sidebar"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Tàu hỏa</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteNamed('admin.tickets.*') ? 'active' : '' }}"
+                    href="{{ route('admin.tickets.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-ticket text-dark icon-sidebar"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Vé tàu</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteNamed('admin.schedules.*') ? 'active' : '' }}"
+                    href="{{ route('admin.schedules.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-clock text-dark icon-sidebar"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Lịch trình</span>
+                </a>
+            </li>
 
             <li class="nav-item">
                 <a class="nav-link {{ Route::currentRouteNamed('admin.smtp-settings.edit') ? 'active' : '' }}"

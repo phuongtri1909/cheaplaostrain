@@ -4,12 +4,25 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\RouteController;
+use App\Http\Controllers\Admin\TrainController;
+use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\AboutUsController;
+use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\StationController;
 use App\Http\Controllers\Admin\LanguageController;
+use App\Http\Controllers\Admin\ScheduleController;
+use App\Http\Controllers\Admin\SeatClassController;
+use App\Http\Controllers\Admin\TrainStopController;
 use App\Http\Controllers\Admin\BannerHomeController;
 use App\Http\Controllers\Admin\FaqCategoryController;
 use App\Http\Controllers\Admin\SmtpSettingController;
 use App\Http\Controllers\Admin\SocialMediaController;
+use App\Http\Controllers\Admin\RouteSegmentController;
+use App\Http\Controllers\Admin\SegmentPriceController;
+use App\Http\Controllers\Admin\SchedulePriceController;
+use App\Http\Controllers\Admin\TrainSeatClassController;
+use App\Http\Controllers\Admin\AdministrativeUnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,3 +69,32 @@ Route::post('/smtp-settings/test', [SmtpSettingController::class, 'sendTest'])->
 // About Us Management
 Route::get('about-us', [AboutUsController::class, 'index'])->name('about-us.index');
 Route::put('about-us', [AboutUsController::class, 'update'])->name('about-us.update');
+
+Route::resource('countries', CountryController::class);
+
+Route::resource('administrative-units', AdministrativeUnitController::class);
+Route::get('administrative-units-by-country', [AdministrativeUnitController::class, 'getByCountry'])
+    ->name('administrative-units.by-country');
+
+Route::resource('stations', StationController::class);
+Route::get('stations-by-unit', [StationController::class, 'getByAdministrativeUnit'])
+    ->name('stations.by-unit');
+
+Route::resource('seat-classes', SeatClassController::class);
+
+Route::resource('routes', RouteController::class);
+
+Route::resource('trains', TrainController::class);
+
+Route::resource('tickets', TicketController::class);
+
+Route::resource('schedules', ScheduleController::class);
+
+Route::resource('schedule-prices', SchedulePriceController::class);
+
+Route::resource('segment-prices', SegmentPriceController::class);
+
+Route::resource('route-segments', RouteSegmentController::class);
+
+Route::resource('train-seat-classes', TrainSeatClassController::class);
+Route::resource('train-stops', TrainStopController::class);

@@ -2,76 +2,16 @@
 @section('title', 'Train Tickets - ' . ($searchParams['departure'] ?? 'Vientiane') . ' to ' . ($searchParams['arrival']
     ?? 'Vang Vieng'))
 
-    @push('styles')
-        <style>
-            .ticket-list-page {
-                min-height: 100vh;
-            }
 
-            .trains-container {
-                display: flex;
-                flex-direction: column;
-                gap: var(--element-gap);
-            }
-
-            .no-trains-card {
-                background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-                border-radius: var(--modern-radius);
-                padding: 4rem;
-                text-align: center;
-                box-shadow: var(--shadow-medium);
-                border: 1px solid var(--accent-green);
-            }
-
-            .no-trains-icon {
-                font-size: 5rem;
-                color: var(--text-light);
-                margin-bottom: 2rem;
-            }
-
-            .no-trains-title {
-                font-size: 2rem;
-                font-weight: 800;
-                color: var(--text-dark);
-                margin-bottom: 1rem;
-            }
-
-            .no-trains-text {
-                color: var(--text-medium);
-                font-size: 1.1rem;
-                margin-bottom: 2rem;
-            }
-
-            .search-again-btn {
-                background: var(--gradient-green);
-                border: none;
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: var(--modern-radius);
-                font-weight: 700;
-                text-decoration: none;
-                display: inline-flex;
-                align-items: center;
-                gap: 0.75rem;
-                transition: var(--transition-smooth);
-                box-shadow: var(--shadow-medium);
-            }
-
-            .search-again-btn:hover {
-                transform: var(--button-hover-transform);
-                box-shadow: var(--shadow-strong);
-                color: white;
-            }
-        </style>
-    @endpush
 
 @section('content')
     <div class="ticket-list-page">
         <x-global-animations />
         <x-hero-section :title="__('Find & Book Your Train Tickets')" :subtitle="__('Select your preferred train and class in one convenient place')" />
-        <x-search-card :searchTitle="__('Search Train Tickets')" :searchSubtitle="__('Enter your travel details to find available train.')" />
+        <x-search-card :searchTitle="__('Search Train Tickets')" :searchSubtitle="__('Enter your travel details to find available train.')" :stations="$stations" />
 
         <x-search-summary :searchParams="$searchParams" :trainsCount="count($trains ?? [])" />
+        
         <div class="container">
             <div class="trains-container my-3 my-md-5" id="trainsContainer">
                 @if (isset($trains) && count($trains) > 0)
@@ -122,6 +62,69 @@
 
     <x-class-selection-modal :searchParams="$searchParams" />
 @endsection
+
+@push('styles')
+    <style>
+        .ticket-list-page {
+            min-height: 100vh;
+        }
+
+        .trains-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--element-gap);
+        }
+
+        .no-trains-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: var(--modern-radius);
+            padding: 4rem;
+            text-align: center;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--accent-green);
+        }
+
+        .no-trains-icon {
+            font-size: 5rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .no-trains-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .no-trains-text {
+            color: var(--text-medium);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-again-btn {
+            background: var(--gradient-green);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: var(--modern-radius);
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .search-again-btn:hover {
+            transform: var(--button-hover-transform);
+            box-shadow: var(--shadow-strong);
+            color: white;
+        }
+    </style>
+@endpush
 
 @push('scripts')
     <script>

@@ -1,6 +1,125 @@
 @props(['train', 'index', 'searchParams'])
 
+@if (isset($train))
+    <div class="train-card-modern" style="--delay: {{ $index * 0.1 }}s" data-train-id="{{ $train['id'] }}"
+        onclick="openClassModal({{ json_encode($train) }}, {{ json_encode($searchParams) }})">
+
+        <div class="train-schedule">
+            <div class="schedule-point">
+                <div class="schedule-time">{{ $train['schedule']['departure_time'] }}</div>
+                <div class="schedule-city">{{ $train['route']['departure_station'] }}</div>
+                <div class="schedule-date">{{ date('Y-m-d', strtotime($train['schedule']['departure_datetime'])) }}</div>
+            </div>
+
+            <div class="schedule-connector">
+                <div class="duration-text">{{ $train['schedule']['duration'] }}</div>
+                <div class="duration-line"></div>
+                <small style="color: var(--text-medium); font-weight: 600;">{{ $train['train_number'] }}</small>
+                <div class="train-type">{{ $train['train_type'] }}</div>
+            </div>
+
+            <div class="schedule-point">
+                <div class="schedule-time">{{ $train['schedule']['arrival_time'] }}</div>
+                <div class="schedule-city">{{ $train['route']['arrival_station'] }}</div>
+                <div class="schedule-date">{{ date('Y-m-d', strtotime($train['schedule']['arrival_datetime'])) }}</div>
+            </div>
+        </div>
+    </div>
+@endif
+
 @once
+
+
+    @push('scripts')
+        <script>
+            function openClassModal(trainData, searchParams) {
+                window.currentTrainData = trainData;
+                window.currentSearchParams = searchParams;
+
+                updateModalContent(trainData, searchParams);
+
+                showClassModal();
+            }
+
+            function updateModalContent(trainData, searchParams) {
+                const modalDeparture = document.getElementById('modalDeparture');
+                const modalArrival = document.getElementById('modalArrival');
+                const modalDate = document.getElementById('modalDate');
+                const modalDuration = document.getElementById('modalDuration');
+                const modalTimes = document.getElementById('modalTimes');
+
+                if (modalDeparture) modalDeparture.textContent = trainData.route.departure_station;
+                if (modalArrival) modalArrival.textContent = trainData.route.arrival_station;
+                if (modalDate) {
+                    const date = new Date(searchParams.travel_date);
+                    modalDate.textContent = date.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                }
+                if (modalDuration) modalDuration.textContent = trainData.schedule.duration;
+                if (modalTimes) modalTimes.textContent =
+                    `${trainData.schedule.departure_time} - ${trainData.schedule.arrival_time}`;
+
+                updateSeatClasses(trainData.seat_classes);
+            }
+
+            function updateSeatClasses(seatClasses) {
+
+                const classContainer = document.querySelector('.class-selection-horizontal');
+                if (!classContainer) return;
+
+                classContainer.innerHTML = '';
+
+                seatClasses.forEach(seatClass => {
+                    const classRow = createClassRow(seatClass);
+                    classContainer.appendChild(classRow);
+                });
+            }
+
+            function createClassRow(seatClass) {
+                const classRow = document.createElement('div');
+                classRow.className = 'class-row';
+                classRow.setAttribute('data-class', seatClass.code);
+                classRow.onclick = () => selectClass(seatClass.code);
+
+                classRow.innerHTML = `
+                    <div class="class-description">
+                        <div class="class-header">
+                            <div>
+                                <h4 class="class-title">${seatClass.name}</h4>
+                                <p class="class-subtitle">${seatClass.description}</p>
+                            </div>
+                        </div>
+                        <div class="seat-availability">
+                            <span style="color: var(--primary-green); font-weight: 600;">
+                                ${seatClass.available_seats} {{ __('seats available') }} / ${seatClass.total_seats} {{ __('total') }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="seat-image-container">
+                        <img src="${seatClass.image}" alt="${seatClass.name} Seats" class="seat-image">
+                    </div>
+
+                    <div class="price-section">
+                        <div class="price-amount">
+                            <span>$${seatClass.price}</span>
+                        </div>
+                        <div class="price-currency">${seatClass.currency}</div>
+                    </div>
+
+                    <button class="book-class-btn" onclick="event.stopPropagation(); confirmBooking('${seatClass.code}', ${seatClass.price}, '${seatClass.name}')">
+                        {{ __('Book') }}
+                    </button>
+                `;
+
+                return classRow;
+            }
+        </script>
+    @endpush
+
     @push('styles')
         <style>
             .train-card-modern {
@@ -12,54 +131,27 @@
                 transition: var(--transition-smooth);
                 cursor: pointer;
                 animation: slideInUp 0.6s ease-out var(--delay, 0s) both;
+                position: relative;
             }
 
             .train-card-modern:hover {
                 transform: var(--card-hover-transform);
                 box-shadow: var(--shadow-strong);
+                border-color: var(--primary-green);
             }
 
-            .train-card-modern:hover {
-                transform: translateX(-100px);
-            }
 
-            .train-info {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .train-details h3 {
-                font-size: 1.8rem;
+            .train-number {
+                font-size: 1.2rem;
                 font-weight: 800;
-                margin-bottom: 0.5rem;
+                color: var(--primary-green);
+                margin-bottom: 0.25rem;
             }
 
             .train-type {
-                opacity: 0.9;
-                font-weight: 500;
-            }
-
-            .train-amenities {
-                display: flex;
-                gap: 0.75rem;
-                flex-wrap: wrap;
-            }
-
-            .amenity-badge {
-                background: rgba(255, 255, 255, 0.25);
-                backdrop-filter: var(--backdrop-blur);
-                border-radius: var(--radius-xl);
-                padding: 0.5rem 1rem;
                 font-size: 0.85rem;
-                font-weight: 600;
-                transition: var(--transition-smooth);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            .amenity-badge:hover {
-                background: rgba(255, 255, 255, 0.35);
-                transform: scale(1.05);
+                color: var(--text-medium);
+                margin-bottom: 0.25rem;
             }
 
             .train-schedule {
@@ -76,6 +168,7 @@
                 border-radius: var(--modern-radius);
                 background: var(--gradient-green-soft);
                 border: 1px solid var(--gradient-green-soft);
+                padding: 1rem;
             }
 
             .schedule-time {
@@ -146,42 +239,6 @@
                 border-radius: var(--radius-lg);
             }
 
-            .book-button {
-                margin: 2rem;
-                background: var(--gradient-green);
-                border: none;
-                color: white;
-                padding: 1.25rem 2rem;
-                border-radius: var(--modern-radius);
-                font-weight: 700;
-                font-size: 1.1rem;
-                transition: var(--transition-smooth);
-                width: calc(100% - 4rem);
-                position: relative;
-                overflow: hidden;
-                box-shadow: var(--shadow-medium);
-            }
-
-            .book-button::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-                transition: left 0.6s ease;
-            }
-
-            .book-button:hover::before {
-                left: 100%;
-            }
-
-            .book-button:hover {
-                transform: var(--button-hover-transform);
-                box-shadow: var(--shadow-strong);
-            }
-
             @keyframes shimmer {
                 0% {
                     left: -100%;
@@ -204,7 +261,7 @@
                 }
             }
 
-            /* FIX MOBILE RESPONSIVE */
+            /* Mobile Responsive */
             @media (max-width: 768px) {
                 .train-schedule {
                     grid-template-columns: 1fr 1fr;
@@ -249,6 +306,12 @@
                 .schedule-date {
                     font-size: 0.8rem;
                 }
+
+                .train-info-overlay {
+                    position: static;
+                    margin: 1rem;
+                    text-align: center;
+                }
             }
 
             @media (max-width: 480px) {
@@ -285,26 +348,3 @@
         </style>
     @endpush
 @endonce
-
-<div class="train-card-modern" style="--delay: {{ $index * 0.1 }}s" data-train-id="{{ $train['id'] }}"
-    onclick="selectTrain({{ $train['id'] }})">
-    <div class="train-schedule">
-        <div class="schedule-point">
-            <div class="schedule-time">{{ $train['departure_time'] }}</div>
-            <div class="schedule-city">{{ $searchParams['departure'] ?? 'Vientiane' }}</div>
-            <div class="schedule-date">{{ date('M d', strtotime($searchParams['date'] ?? 'tomorrow')) }}</div>
-        </div>
-
-        <div class="schedule-connector">
-            <div class="duration-text">{{ $train['duration'] }}</div>
-            <div class="duration-line"></div>
-            <small style="color: var(--text-medium); font-weight: 600;">{{ __('Direct') }}</small>
-        </div>
-
-        <div class="schedule-point">
-            <div class="schedule-time">{{ $train['arrival_time'] }}</div>
-            <div class="schedule-city">{{ $searchParams['arrival'] ?? 'Vang Vieng' }}</div>
-            <div class="schedule-date">{{ date('M d', strtotime($searchParams['date'] ?? 'tomorrow')) }}</div>
-        </div>
-    </div>
-</div>

@@ -28,11 +28,6 @@ use App\Http\Controllers\Admin\AdministrativeUnitController;
 |--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register admin routes for your application.
-| These routes are loaded by the RouteServiceProvider within a group which
-| contains the "admin" middleware group.
-|
 */
 
 Route::get('/', function () {
@@ -88,8 +83,11 @@ Route::resource('trains', TrainController::class);
 
 Route::resource('tickets', TicketController::class);
 
+// Schedule routes - AJAX route must come BEFORE resource routes
+Route::get('schedules/get-train-seat-classes', [ScheduleController::class, 'getTrainSeatClasses'])
+    ->name('schedules.get-train-seat-classes');
 Route::resource('schedules', ScheduleController::class);
 
-Route::resource('schedule-prices', SchedulePriceController::class);;
+Route::resource('schedule-prices', SchedulePriceController::class);
 
 Route::resource('train-seat-classes', TrainSeatClassController::class);

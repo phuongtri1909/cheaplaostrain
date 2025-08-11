@@ -133,7 +133,7 @@
                             </tbody>
                         </table>
                         <div class="px-3">
-                            {{ $schedulePrices->links() }}
+                            {{ $schedulePrices->links('components.pagination') }}
                         </div>
                     </div>
                 </div>

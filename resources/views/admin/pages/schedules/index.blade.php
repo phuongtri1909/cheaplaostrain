@@ -23,7 +23,7 @@
                         <div class="col-md-3">
                             <label for="search" class="text-xs text-secondary mb-0">Tìm kiếm</label>
                             <input type="text" class="form-control form-control-sm" id="search" name="search"
-                                   placeholder="Giờ khởi hành, đến hoặc số tàu..." value="{{ request('search') }}">
+                                   placeholder="Tàu, tuyến, thời gian..." value="{{ request('search') }}">
                         </div>
                         <div class="col-md-2">
                             <label for="train_id" class="text-xs text-secondary mb-0">Tàu</label>
@@ -56,15 +56,15 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label for="effective_date" class="text-xs text-secondary mb-0">Ngày hiệu lực</label>
-                            <input type="date" class="form-control form-control-sm" id="effective_date" name="effective_date"
-                                   value="{{ request('effective_date') }}">
+                            <label for="departure_date" class="text-xs text-secondary mb-0">Ngày khởi hành</label>
+                            <input type="date" class="form-control form-control-sm" id="departure_date" name="departure_date"
+                                   value="{{ request('departure_date') }}">
                         </div>
                         <div class="col-md-1">
                             <button class="btn btn-outline-secondary btn-sm mb-0" type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
-                            @if(request()->hasAny(['search', 'train_id', 'route_id', 'is_active', 'effective_date']))
+                            @if(request()->hasAny(['search', 'train_id', 'route_id', 'is_active', 'departure_date']))
                                 <a href="{{ route('admin.schedules.index') }}" class="btn btn-outline-secondary btn-sm mb-0 ms-1">
                                     <i class="fa fa-times"></i>
                                 </a>
@@ -83,9 +83,9 @@
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">STT</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tàu</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tuyến</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Giờ KH - Đến</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày hoạt động</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hiệu lực</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Khởi hành</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Đến</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thời gian</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thao tác</th>
                                 </tr>
@@ -111,38 +111,19 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <div class="d-flex align-items-center">
-                                                <span class="badge badge-sm bg-gradient-success me-2">{{ $schedule->departure_time }}</span>
-                                                <i class="fa fa-arrow-right mx-1"></i>
-                                                <span class="badge badge-sm bg-gradient-info">{{ $schedule->arrival_time }}</span>
+                                            <div class="d-flex flex-column">
+                                                <span class="text-xs font-weight-bold">{{ $schedule->departure_date ?? 'N/A' }}</span>
+                                                <span class="badge badge-sm bg-gradient-success">{{ $schedule->departure_time ?? 'N/A' }}</span>
                                             </div>
-                                        </td>
-                                        <td>
-                                            @if($schedule->operating_days && count($schedule->operating_days) > 0)
-                                                <div class="d-flex flex-wrap">
-                                                    @php
-                                                        $dayNames = [
-                                                            1 => 'CN', 2 => 'T2', 3 => 'T3', 4 => 'T4',
-                                                            5 => 'T5', 6 => 'T6', 7 => 'T7'
-                                                        ];
-                                                    @endphp
-                                                    @foreach($schedule->operating_days as $day)
-                                                        <span class="badge badge-xs bg-gradient-secondary me-1 mb-1">{{ $dayNames[$day] ?? $day }}</span>
-                                                    @endforeach
-                                                </div>
-                                            @else
-                                                <span class="text-xs text-secondary">Hàng ngày</span>
-                                            @endif
                                         </td>
                                         <td>
                                             <div class="d-flex flex-column">
-                                                <span class="text-xs">{{ $schedule->effective_from->format('d/m/Y') }}</span>
-                                                @if($schedule->effective_until)
-                                                    <span class="text-xs text-secondary">đến {{ $schedule->effective_until->format('d/m/Y') }}</span>
-                                                @else
-                                                    <span class="text-xs text-secondary">vô thời hạn</span>
-                                                @endif
+                                                <span class="text-xs font-weight-bold">{{ $schedule->arrival_date ?? 'N/A' }}</span>
+                                                <span class="badge badge-sm bg-gradient-info">{{ $schedule->arrival_time ?? 'N/A' }}</span>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-xs font-weight-bold">{{ $schedule->getFormattedDuration() }}</span>
                                         </td>
                                         <td class="text-center">
                                             @if($schedule->is_active)
@@ -178,7 +159,7 @@
                             </tbody>
                         </table>
                         <div class="px-3">
-                            {{ $schedules->links() }}
+                            {{ $schedules->links('components.pagination') }}
                         </div>
                     </div>
                 </div>

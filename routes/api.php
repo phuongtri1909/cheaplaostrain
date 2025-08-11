@@ -18,6 +18,3 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-// Trong routes/api.php hoặc routes/web.php
-Route::post('/email-you-a-copy', [HomeController::class, 'EmailYouACopy']);

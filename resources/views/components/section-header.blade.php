@@ -17,6 +17,7 @@
                 font-size: 0.85rem;
                 font-weight: 600;
                 margin-bottom: 1rem;
+                margin-top: 1rem;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
             }

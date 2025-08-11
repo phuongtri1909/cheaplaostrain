@@ -17,9 +17,23 @@
 <x-search-card
     :searchTitle="__('Find Train Tickets')"
     :searchSubtitle="__('Search and book train tickets across Laos with the best prices and schedules')"
+    :stations="$stations"
 />
 
 <!-- Popular Routes Section -->
+@if($popularRoutes->count() > 0)
+<section class="section-modern mt-5" id="routes">
+    <div class="container">
+        <x-section-header
+            :badge="__('Available Routes')"
+            :title="__('Popular Train Routes in Laos')"
+            :subtitle="__('Book tickets for these popular routes with multiple daily departures')"
+        />
+
+        <x-route-cards :routes="$popularRoutes->toArray()" />
+    </div>
+</section>
+@else
 <section class="section-modern mt-5" id="routes">
     <div class="container">
         <x-section-header
@@ -31,40 +45,41 @@
         <x-route-cards :routes="[
             [
                 'image' => 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=1469&q=80',
-                'from_code' => 'VTE',
+                'from_code' => '1', // Station ID for Vientiane
                 'from_name' => __('Vientiane'),
-                'to_code' => 'VGV',
+                'to_code' => '2', // Station ID for Vang Vieng
                 'to_name' => __('Vang Vieng'),
-                'price' => '150,000 ₭',
-                'duration' => __('1h 30m'),
+                'price' => '$2.00',
+                'duration' => __('3h 0m'),
                 'availability' => __('Daily departures')
             ],
             [
                 'image' => 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1480&q=80',
-                'from_code' => 'VTE',
+                'from_code' => '1', // Station ID for Vientiane
                 'from_name' => __('Vientiane'),
-                'to_code' => 'LPB',
+                'to_code' => '3', // Station ID for Luang Prabang
                 'to_name' => __('Luang Prabang'),
-                'price' => '250,000 ₭',
-                'duration' => __('2h 45m'),
-                'availability' => __('3 times daily')
+                'price' => '$5.00',
+                'duration' => __('8h 0m'),
+                'availability' => __('Daily departures')
             ],
             [
                 'image' => 'https://images.unsplash.com/photo-1563906267088-b029e7101114?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
-                'from_code' => 'VTE',
+                'from_code' => '1', // Station ID for Vientiane
                 'from_name' => __('Vientiane'),
-                'to_code' => 'PKS',
+                'to_code' => '4', // Station ID for Pakse
                 'to_name' => __('Pakse'),
-                'price' => '400,000 ₭',
-                'duration' => __('8h 30m'),
-                'availability' => __('Daily overnight')
+                'price' => '$8.00',
+                'duration' => __('13h 0m'),
+                'availability' => __('Daily departures')
             ]
         ]" />
     </div>
 </section>
+@endif
 
 <!-- How It Works Section -->
-<section class="section-modern alt mt-5" id="features">
+<section class="section-modern alt mt-5 p-3" id="features">
     <div class="container">
         <x-section-header
             :badge="__('How It Works')"
@@ -137,10 +152,14 @@
 </section>
 
 <!-- Stats Section -->
+@php
+    $stationsCount = $stations->count();
+@endphp
+
 <x-stats-section :stats="[
     ['number' => 10000, 'label' => __('Happy Travelers')],
     ['number' => 500, 'label' => __('Daily Bookings')],
-    ['number' => 15, 'label' => __('Cities Connected')],
+    ['number' => $stationsCount, 'label' => __('Cities Connected')],
     ['number' => 99, 'label' => __('Success Rate') . '%']
 ]" />
 

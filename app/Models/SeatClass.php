@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SeatClass extends Model
 {
@@ -22,4 +23,8 @@ class SeatClass extends Model
 
     public function trainSeatClasses() { return $this->hasMany(TrainSeatClass::class); }
     public function tickets() { return $this->hasMany(Ticket::class); }
+
+    public function getImageUrlAttribute() {
+        return Storage::url($this->image);
+    }
 }

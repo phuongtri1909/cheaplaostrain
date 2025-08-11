@@ -174,7 +174,7 @@
                             </tbody>
                         </table>
                         <div class="px-3">
-                            {{ $trainSeatClasses->links() }}
+                            {{ $trainSeatClasses->links('components.pagination') }}
                         </div>
                     </div>
                 </div>

@@ -12,11 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('train_id')->constrained()->cascadeOnDelete();
             $table->foreignId('route_id')->constrained()->cascadeOnDelete();
-            $table->time('departure_time');
-            $table->time('arrival_time');
-            $table->json('operating_days');
-            $table->date('effective_from');
-            $table->date('effective_until')->nullable();
+            $table->timestamp('departure_datetime');
+            $table->timestamp('arrival_datetime');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 

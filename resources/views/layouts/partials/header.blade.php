@@ -95,7 +95,7 @@
 
                         <!-- Book Ticket Button -->
                         <div class="d-flex">
-                            <a href="{{ route('tickets.search') }}"
+                            <a href="{{ route('home') }}"
                                 class="btn-book-ticket btn btn-md rounded-4 btn-dark">
                                 Book Ticket
                             </a>

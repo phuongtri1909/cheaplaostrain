@@ -161,7 +161,7 @@
                             </tbody>
                         </table>
                         <div class="px-3">
-                            {{ $routes->links() }}
+                            {{ $routes->links('components.pagination') }}
                         </div>
                     </div>
                 </div>

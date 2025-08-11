@@ -71,7 +71,7 @@
                                         </td>
                                         <td>
                                             @if($seatClass->image)
-                                                <img src="{{ asset($seatClass->image) }}" alt="{{ $seatClass->name }}" class="avatar avatar-sm me-3" style="object-fit: cover;">
+                                                <img src="{{ Storage::url($seatClass->image) }}" alt="{{ $seatClass->name }}" class="avatar avatar-sm me-3" style="object-fit: cover;">
                                             @else
                                                 <div class="avatar avatar-sm me-3 bg-gradient-secondary d-flex align-items-center justify-content-center">
                                                     <i class="fa fa-image text-white"></i>
@@ -132,7 +132,7 @@
                             </tbody>
                         </table>
                         <div class="px-3">
-                            {{ $seatClasses->links() }}
+                            {{ $seatClasses->links('components.pagination') }}
                         </div>
                     </div>
                 </div>

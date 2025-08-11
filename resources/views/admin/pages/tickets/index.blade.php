@@ -182,7 +182,7 @@
                             </tbody>
                         </table>
                         <div class="px-3">
-                            {{ $tickets->links() }}
+                            {{ $tickets->links('components.pagination') }}
                         </div>
                     </div>
                 </div>

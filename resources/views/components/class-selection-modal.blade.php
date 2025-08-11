@@ -7,77 +7,25 @@
             </button>
 
             <div class="modal-route-summary">
-                <div class="modal-station" id="modalDeparture">{{ $searchParams['departure'] ?? 'Vientiane' }}</div>
+                <div class="modal-station" id="modalDeparture">Loading...</div>
                 <i class="fas fa-arrow-right modal-arrow"></i>
-                <div class="modal-station" id="modalArrival">{{ $searchParams['arrival'] ?? 'Vang Vieng' }}</div>
+                <div class="modal-station" id="modalArrival">Loading...</div>
             </div>
 
             <div class="modal-journey-info">
-                <span id="modalDate">{{ date('D, M d', strtotime($searchParams['date'] ?? 'tomorrow')) }}</span>
-                <span id="modalDuration">3h 30m</span>
-                <span id="modalTimes">08:00 - 11:30</span>
+                <span id="modalDate">Loading...</span>
+                <span id="modalDuration">Loading...</span>
+                <span id="modalTimes">Loading...</span>
             </div>
         </div>
 
         <!-- Horizontal Class Selection Body -->
         <div class="class-modal-body">
             <div class="class-selection-horizontal">
-                <!-- Second Class Row -->
-                <div class="class-row" data-class="2nd" onclick="selectClass('2nd')">
-                    <div class="class-description">
-                        <div class="class-header">
-
-                            <div>
-                                <h4 class="class-title">{{ __('Second Class') }}</h4>
-                                <p class="class-subtitle">{{ __('Comfortable standard seating') }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="seat-image-container">
-                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=180&fit=crop&crop=center"
-                            alt="Second Class Seats" class="seat-image">
-                    </div>
-
-                    <div class="price-section">
-                        <div class="price-amount">
-                            <span id="price2nd">25$</span>
-                        </div>
-                    </div>
-
-                    <button class="book-class-btn" onclick="event.stopPropagation(); confirmBooking('2nd')">
-
-                        {{ __('Book') }}
-                    </button>
-                </div>
-
-                <!-- First Class Row -->
-                <div class="class-row" data-class="1st" onclick="selectClass('1st')">
-                    <div class="class-description">
-                        <div class="class-header">
-
-                            <div>
-                                <h4 class="class-title">{{ __('First Class') }}</h4>
-                                <p class="class-subtitle">{{ __('Premium luxury experience') }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="seat-image-container">
-                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=180&fit=crop&crop=center"
-                            alt="First Class Seats" class="seat-image">
-                    </div>
-
-                    <div class="price-section">
-                        <div class="price-amount">
-                            <span id="price1st">45$</span>
-                        </div>
-                    </div>
-
-                    <button class="book-class-btn" onclick="event.stopPropagation(); confirmBooking('1st')">
-
-                        {{ __('Book') }}
-                    </button>
+                <!-- Dynamic content will be loaded here -->
+                <div class="loading-placeholder">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>{{ __('Loading seat classes...') }}</span>
                 </div>
             </div>
         </div>
@@ -118,6 +66,22 @@
                 border: 1px solid var(--accent-green);
             }
 
+            /* Loading placeholder */
+            .loading-placeholder {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+                padding: 3rem;
+                color: var(--text-medium);
+                font-size: 1.1rem;
+            }
+
+            .loading-placeholder i {
+                font-size: 2rem;
+                color: var(--primary-green);
+            }
+
             /* Mini Train Card Header */
             .class-modal-header {
                 background: var(--gradient-overlay);
@@ -137,34 +101,6 @@
                 background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1));
                 transform: translateX(100px);
                 animation: headerShimmer 3s ease-in-out infinite;
-            }
-
-            .modal-train-details h3 {
-                font-size: 1.5rem;
-                font-weight: 800;
-                margin: 0 0 0.25rem 0;
-            }
-
-            .modal-train-type {
-                opacity: 0.9;
-                font-weight: 500;
-                font-size: 0.9rem;
-            }
-
-            .modal-amenities {
-                display: flex;
-                gap: 0.5rem;
-                flex-wrap: wrap;
-            }
-
-            .modal-amenity-badge {
-                background: rgba(255, 255, 255, 0.25);
-                backdrop-filter: var(--backdrop-blur);
-                border-radius: var(--radius-xl);
-                padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
-                font-weight: 600;
-                border: 1px solid rgba(255, 255, 255, 0.2);
             }
 
             .modal-route-summary {
@@ -299,14 +235,9 @@
                 margin: 0;
             }
 
-            .feature-tag {
-                background: var(--gradient-green-soft);
-                color: var(--primary-green);
-                padding: 0.25rem 0.75rem;
-                border-radius: var(--radius-lg);
-                font-size: 0.85rem;
-                font-weight: 600;
-                border: 1px solid var(--accent-green);
+            .seat-availability {
+                font-size: 0.9rem;
+                margin-top: 0.5rem;
             }
 
             /* Seat Image */
@@ -316,9 +247,9 @@
             }
 
             .seat-image {
-                width: 100%;
-                height: 90px;
-                object-fit: cover;
+                width: auto;
+                height: 100px;
+                object-fit: scale-down;
                 border-radius: var(--modern-radius);
                 border: 3px solid var(--accent-green);
                 box-shadow: var(--shadow-soft);
@@ -329,7 +260,6 @@
                 transform: scale(1.05);
                 box-shadow: var(--shadow-medium);
             }
-
 
             /* Price Section */
             .price-section {
@@ -352,12 +282,6 @@
                 font-weight: 600;
             }
 
-            .price-note {
-                font-size: 0.8rem;
-                color: var(--text-medium);
-                font-style: italic;
-            }
-
             /* Book Button */
             .book-class-btn {
                 background: var(--gradient-green);
@@ -377,6 +301,17 @@
                 gap: 0.5rem;
             }
 
+            .book-class-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.6s ease;
+            }
+
             .book-class-btn:hover::before {
                 left: 100%;
             }
@@ -386,25 +321,25 @@
                 box-shadow: var(--shadow-strong);
             }
 
-            @keyframes modalArrowPulse {
+            .book-class-btn:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                transform: none;
+            }
 
-                0%,
-                100% {
+            @keyframes modalArrowPulse {
+                0%, 100% {
                     transform: translateX(0) scale(1);
                 }
-
                 50% {
                     transform: translateX(4px) scale(1.1);
                 }
             }
 
             @keyframes headerShimmer {
-
-                0%,
-                100% {
+                0%, 100% {
                     transform: translateX(100px);
                 }
-
                 50% {
                     transform: translateX(-100px);
                 }
@@ -414,7 +349,6 @@
                 from {
                     opacity: 0;
                 }
-
                 to {
                     opacity: 1;
                 }
@@ -425,7 +359,6 @@
                     opacity: 0;
                     transform: scale(0.95);
                 }
-
                 to {
                     opacity: 1;
                     transform: scale(1);
@@ -459,53 +392,69 @@
         </style>
     @endpush
 
-
     @push('scripts')
         <script>
             // Class Selection Modal JavaScript
-            function selectClass(classType) {
+            function selectClass(classCode) {
                 // Remove previous selections
                 document.querySelectorAll('.class-row.selected').forEach(row => {
                     row.classList.remove('selected');
                 });
 
                 // Mark current selection
-                const selectedRow = document.querySelector(`[data-class="${classType}"]`);
+                const selectedRow = document.querySelector(`[data-class="${classCode}"]`);
                 if (selectedRow) {
                     selectedRow.classList.add('selected');
                 }
             }
 
-            function confirmBooking(classType) {
-                if (!window.currentTrainData) return;
+            function confirmBooking(classCode, price, className) {
+                if (!window.currentTrainData || !window.currentSearchParams) {
+                    alert('{{ __("Error: Missing booking data") }}');
+                    return;
+                }
 
-                const price = classType === '1st' ? window.currentTrainData.price_1st : window.currentTrainData.price_2nd;
-                const className = classType === '1st' ? '{{ __('First Class') }}' : '{{ __('Second Class') }}';
+                const trainData = window.currentTrainData;
+                const searchParams = window.currentSearchParams;
 
                 const confirmed = confirm(`{{ __('Confirm your booking?') }}
 
-{{ __('Train') }}: ${window.currentTrainData.train_number}
+{{ __('Train') }}: ${trainData.train_number}
+{{ __('Route') }}: ${trainData.route.departure_station} → ${trainData.route.arrival_station}
+{{ __('Date') }}: ${searchParams.travel_date}
+{{ __('Time') }}: ${trainData.schedule.departure_time} - ${trainData.schedule.arrival_time}
 {{ __('Class') }}: ${className}
-{{ __('Price') }}: ${price.toLocaleString()} LAK
+{{ __('Price') }}: $${price}
 
 {{ __('Click OK to proceed to payment') }}`);
 
                 if (confirmed) {
-                    alert('{{ __('Redirecting to payment...') }}');
-                    closeClassModal();
-
+                    // Create booking data
                     const bookingData = {
-                        train: window.currentTrain,
-                        train_number: window.currentTrainData.train_number,
-                        class: classType,
+                        train_id: trainData.id,
+                        schedule_id: trainData.schedule.id,
+                        train_number: trainData.train_number,
+                        seat_class_code: classCode,
+                        seat_class_name: className,
                         price: price,
-                        departure: @json($searchParams['departure'] ?? 'Vientiane'),
-                        arrival: @json($searchParams['arrival'] ?? 'Vang Vieng'),
-                        date: @json($searchParams['date'] ?? 'tomorrow')
+                        departure_station: trainData.route.departure_station,
+                        arrival_station: trainData.route.arrival_station,
+                        departure_time: trainData.schedule.departure_time,
+                        arrival_time: trainData.schedule.arrival_time,
+                        travel_date: searchParams.travel_date,
+                        passengers: searchParams.passengers || 1
                     };
 
                     console.log('Booking data:', bookingData);
-                    // window.location.href = '/payment?booking=' + btoa(JSON.stringify(bookingData));
+
+                    // Close modal
+                    closeClassModal();
+
+                    // TODO: Redirect to booking/payment page
+                    alert('{{ __("Redirecting to booking page...") }}');
+
+                    // Example redirect (implement your booking route)
+                    // window.location.href = `/booking?data=${encodeURIComponent(JSON.stringify(bookingData))}`;
                 }
             }
 
@@ -527,23 +476,11 @@
                     document.querySelectorAll('.class-row.selected').forEach(row => {
                         row.classList.remove('selected');
                     });
+
+                    // Clear data
+                    window.currentTrainData = null;
+                    window.currentSearchParams = null;
                 }
-            }
-
-            function updateClassModal() {
-                if (!window.currentTrainData) return;
-
-                // Update header info
-                const modalTrainNumber = document.getElementById('modalTrainNumber');
-                const modalTrainType = document.getElementById('modalTrainType');
-
-                if (modalTrainNumber) {
-                    modalTrainNumber.textContent = `{{ __('Train') }} ${window.currentTrainData.train_number}`;
-                }
-                if (modalTrainType) {
-                    modalTrainType.textContent = window.currentTrainData.train_type;
-                }
-
             }
 
             // Modal event listeners

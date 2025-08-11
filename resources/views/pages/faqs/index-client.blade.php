@@ -40,7 +40,7 @@
     }
 
     .search-box {
-        background: var(--warm-white);
+        background: var(--glass-bg);
         border-radius: var(--radius-xl);
         padding: 4px;
         box-shadow: var(--shadow-medium);
@@ -219,13 +219,11 @@
     }
 
     .faq-question:hover {
-        background: var(--accent-green);
-        color: var(--primary-green);
+
     }
 
     .faq-question.active {
-        background: var(--gradient-green);
-        color: white;
+
     }
 
     .faq-toggle {
@@ -251,7 +249,6 @@
         max-height: 0;
         overflow: hidden;
         transition: var(--transition-slow);
-        background: var(--accent-green);
     }
 
     .faq-answer.show {
@@ -340,43 +337,43 @@
         .faq-hero {
             padding: 35px 0 25px 0;
         }
-        
+
         .faq-hero h1 {
             font-size: 2rem;
         }
-        
+
         .faq-hero p {
             font-size: 0.9rem;
         }
-        
+
         .search-box {
             margin-top: 1rem;
             max-width: 100%;
         }
-        
+
         .category-select-wrapper {
             max-width: 100%;
         }
-        
+
         .category-select {
             font-size: 0.9rem;
             padding: 10px 40px 10px 16px;
         }
-        
+
         .faq-question {
             padding: 1rem 1.2rem;
             font-size: 0.95rem;
         }
-        
+
         .faq-answer-content {
             padding: 1rem 1.2rem;
             font-size: 0.9rem;
         }
-        
+
         .category-header {
             padding: 1rem 1.2rem;
         }
-        
+
         .category-title {
             font-size: 1.1rem;
         }
@@ -398,11 +395,11 @@
             <div class="col-lg-8">
                 <h1>Frequently Asked Questions</h1>
                 <p>Find answers to common questions and get the help you need</p>
-                
+
                 <!-- Search Box -->
                 <div class="search-box">
                     <div class="d-flex align-items-center">
-                        <input type="text" id="faqSearch" class="search-input" 
+                        <input type="text" id="faqSearch" class="search-input"
                                placeholder="Search questions...">
                         <button type="button" class="search-btn" onclick="searchFAQs()">
                             <i class="fas fa-search"></i>
@@ -445,9 +442,9 @@
         <div id="faqContent">
             @foreach($categories as $categoryIndex => $category)
                 @if($category->faqs->count() > 0)
-                    <div class="faq-category" data-category="{{ $category->id }}" 
+                    <div class="faq-category" data-category="{{ $category->id }}"
                          style="animation-delay: {{ $categoryIndex * 0.1 }}s">
-                        
+
                         <!-- Category Header -->
                         <div class="category-header">
                             <h2 class="category-title">
@@ -462,7 +459,7 @@
                         <div class="faq-accordion">
                             @foreach($category->faqs as $faqIndex => $faq)
                                 <div class="faq-item">
-                                    <button class="faq-question" type="button" 
+                                    <button class="faq-question" type="button"
                                             onclick="toggleFAQ(this)">
                                         <span>{{ $faq->question }}</span>
                                         <div class="faq-toggle">
@@ -499,7 +496,7 @@
     function toggleFAQ(button) {
         const answer = button.nextElementSibling;
         const isOpen = answer.classList.contains('show');
-        
+
         // Close all other FAQs in the same category
         const category = button.closest('.faq-category');
         category.querySelectorAll('.faq-question.active').forEach(q => {
@@ -508,7 +505,7 @@
                 q.nextElementSibling.classList.remove('show');
             }
         });
-        
+
         // Toggle current FAQ
         if (isOpen) {
             button.classList.remove('active');
@@ -522,10 +519,10 @@
     // Category Filter via Select
     document.getElementById('categorySelect').addEventListener('change', function() {
         const categoryId = this.value;
-        
+
         // Hide search results
         document.getElementById('searchResults').classList.remove('show');
-        
+
         // Show/hide categories
         document.querySelectorAll('.faq-category').forEach(category => {
             if (categoryId === 'all' || category.dataset.category === categoryId) {
@@ -546,13 +543,13 @@
     document.getElementById('faqSearch').addEventListener('input', function() {
         clearTimeout(searchTimeout);
         const query = this.value.trim();
-        
+
         if (query.length < 2) {
             document.getElementById('searchResults').classList.remove('show');
             document.getElementById('faqContent').style.display = 'block';
             return;
         }
-        
+
         searchTimeout = setTimeout(() => {
             searchFAQs(query);
         }, 300);
@@ -562,9 +559,9 @@
         if (!query) {
             query = document.getElementById('faqSearch').value.trim();
         }
-        
+
         if (query.length < 2) return;
-        
+
         fetch(`{{ route('faqs.search') }}?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
@@ -579,7 +576,7 @@
         const searchResultsDiv = document.getElementById('searchResults');
         const faqContent = document.getElementById('faqContent');
         const resultsContent = searchResultsDiv.querySelector('.search-results-content');
-        
+
         if (results.length === 0) {
             resultsContent.innerHTML = `
                 <div class="no-results">
@@ -593,7 +590,7 @@
                            <h4 style="margin: 0; color: var(--text-dark); font-size: 1.1rem;">Search results for: "<span style="color: var(--primary-green);">${query}</span>"</h4>
                            <small style="color: var(--text-medium);">Found ${results.length} result${results.length > 1 ? 's' : ''}</small>
                        </div>`;
-            
+
             results.forEach(faq => {
                 html += `
                     <div class="search-result-item" onclick="scrollToFAQ(${faq.id})">
@@ -602,10 +599,10 @@
                     </div>
                 `;
             });
-            
+
             resultsContent.innerHTML = html;
         }
-        
+
         searchResultsDiv.classList.add('show');
         faqContent.style.display = 'none';
     }
@@ -620,11 +617,11 @@
         document.getElementById('faqSearch').value = '';
         document.getElementById('searchResults').classList.remove('show');
         document.getElementById('faqContent').style.display = 'block';
-        
+
         // Reset category select to show all
         document.getElementById('categorySelect').value = 'all';
         document.getElementById('categorySelect').dispatchEvent(new Event('change'));
-        
+
         // Find and open the specific FAQ
         setTimeout(() => {
             const faqButtons = document.querySelectorAll('.faq-question');

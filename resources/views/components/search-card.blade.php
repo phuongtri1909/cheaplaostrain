@@ -1,6 +1,226 @@
-@props(['searchTitle', 'searchSubtitle'])
+@props(['searchTitle', 'searchSubtitle', 'stations' => collect()])
+
+<div class="search-card-wrapper">
+    <div class="container">
+        <div class="search-card" id="searchCard">
+            <div class="search-header">
+                <div class="search-icon">
+                    <i class="fas fa-train"></i>
+                </div>
+                <div>
+                    <h2 class="search-title">{{ $searchTitle }}</h2>
+                    <p class="search-subtitle">{{ $searchSubtitle }}</p>
+                </div>
+            </div>
+
+            <form action="{{ route('tickets.list') }}" method="GET" id="searchForm">
+                <div class="search-form">
+                    <div class="form-group">
+                        <select class="form-control-floating" name="departure" id="departure" required>
+                            @foreach ($stations as $station)
+                                <option value="{{ $station->code }}"
+                                    {{ request('departure') == $station->code ? 'selected' : '' }}>
+                                    {{ $station->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <label class="form-label-floating">{{ __('From') }}</label>
+                    </div>
+
+                    <button type="button" class="route-swap" onclick="swapStations()">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+
+                    <div class="form-group">
+                        <select class="form-control-floating" name="arrival" id="destination" required>
+                            @foreach ($stations as $station)
+                                <option value="{{ $station->code }}"
+                                    {{ request('arrival') == $station->code ? 'selected' : '' }}>
+                                    {{ $station->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <label class="form-label-floating">{{ __('To') }}</label>
+                    </div>
+
+                    <div class="form-group">
+                        @php
+                            // ✅ Tính default date theo timezone Lào
+                            $laosToday = \Carbon\Carbon::now('Asia/Vientiane');
+                            $defaultTravelDate = $laosToday->copy()->addDays(2)->format('Y-m-d');
+                            $travelDateValue = request('travel_date', $defaultTravelDate);
+                        @endphp
+
+                        <input type="text" class="form-control-floating" name="travel_date" id="travel-date"
+                            placeholder=" " required readonly
+                            value="{{ $travelDateValue }}"
+                            data-laos-timezone="Asia/Vientiane"
+                            data-laos-today="{{ $laosToday->format('Y-m-d') }}"
+                            data-laos-default="{{ $defaultTravelDate }}">
+                        <label class="form-label-floating">{{ __('Departure Date') }} ({{ __('Laos Time') }})</label>
+
+                        {{-- Debug info (có thể xóa sau) --}}
+                        <small style="font-size: 10px; color: #999; position: absolute; bottom: -15px; left: 0;">
+                            Laos Today: {{ $laosToday->format('Y-m-d H:i') }} | Default: {{ $defaultTravelDate }}
+                        </small>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-search-modern">
+                    <i class="fas fa-search"></i>
+                    <span>{{ __('Search Trains') }}</span>
+                </button>
+
+                <div class="trust-indicators">
+                    <div class="trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ __('Instant confirmation') }}</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>{{ __('Secure booking') }}</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-headset"></i>
+                        <span>{{ __('24/7 support') }}</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @once
+    @push('scripts')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    @endpush
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const travelDateInput = document.getElementById('travel-date');
+                const currentTravelDate = travelDateInput.value;
+
+                const laosTimezone = travelDateInput.getAttribute('data-laos-timezone');
+                const laosToday = travelDateInput.getAttribute('data-laos-today');
+                const laosDefault = travelDateInput.getAttribute('data-laos-default');
+
+                let defaultDate;
+                if (currentTravelDate && currentTravelDate !== '') {
+                    defaultDate = new Date(currentTravelDate);
+                } else {
+                    defaultDate = new Date(laosDefault);
+                }
+
+                const flatpickrInstance = flatpickr("#travel-date", {
+                    defaultDate: defaultDate,
+                    dateFormat: "Y-m-d",
+                    allowInput: false,
+                    clickOpens: true,
+                    disableMobile: true,
+
+                    disable: [
+                        function(date) {
+                            const dateStr = date.getFullYear() + '-' +
+                                          String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                                          String(date.getDate()).padStart(2, '0');
+
+                            return dateStr < laosToday;
+                        }
+                    ],
+
+                    locale: {
+                        firstDayOfWeek: 1,
+                        weekdays: {
+                            shorthand: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                            longhand: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+                        },
+                        months: {
+                            shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                            longhand: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                        }
+                    },
+
+                    onReady: function(selectedDates, dateStr, instance) {
+                        if (currentTravelDate && currentTravelDate !== '') {
+                            instance.setDate(currentTravelDate, false);
+                        }
+                    },
+
+                    onChange: function(selectedDates, dateStr, instance) {
+                        
+                    }
+                });
+
+                if (currentTravelDate && currentTravelDate !== '') {
+                    travelDateInput.value = currentTravelDate;
+                    travelDateInput.classList.add('has-value');
+                }
+
+                const selectElements = document.querySelectorAll('.form-control-floating');
+                selectElements.forEach(select => {
+                    if (select.value && select.value !== '') {
+                        select.classList.add('has-value');
+                    }
+
+                    select.addEventListener('change', function() {
+                        if (this.value && this.value !== '') {
+                            this.classList.add('has-value');
+                        } else {
+                            this.classList.remove('has-value');
+                        }
+                    });
+                });
+
+                const inputElements = document.querySelectorAll('input.form-control-floating');
+                inputElements.forEach(input => {
+                    if (input.value && input.value !== '') {
+                        input.classList.add('has-value');
+                    }
+
+                    input.addEventListener('input', function() {
+                        if (this.value && this.value !== '') {
+                            this.classList.add('has-value');
+                        } else {
+                            this.classList.remove('has-value');
+                        }
+                    });
+                });
+
+                window.swapStations = function() {
+                    const departure = document.getElementById('departure');
+                    const destination = document.getElementById('destination');
+
+                    if (departure && destination) {
+                        const temp = departure.value;
+                        departure.value = destination.value;
+                        destination.value = temp;
+
+                        departure.dispatchEvent(new Event('change'));
+                        destination.dispatchEvent(new Event('change'));
+                    }
+                };
+            });
+
+            function handleResponsiveLayout() {
+                const isMobile = window.innerWidth <= 768;
+                const searchButton = document.querySelector('.btn-search-modern');
+                const lastFormGroup = document.querySelector('.search-form .form-group:last-child');
+                const searchForm = document.querySelector('.search-form');
+
+                if (isMobile && searchButton && lastFormGroup) {
+                    lastFormGroup.appendChild(searchButton);
+                } else if (!isMobile && searchButton && searchForm) {
+                    searchForm.appendChild(searchButton);
+                }
+            }
+
+            window.addEventListener('load', handleResponsiveLayout);
+            window.addEventListener('resize', handleResponsiveLayout);
+        </script>
+    @endpush
+
     @push('styles')
         <style>
             /* Search Card - Floating between sections */
@@ -248,179 +468,5 @@
                 }
             }
         </style>
-    @endpush
-
-    @push('scripts')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    @endpush
-@endonce
-
-<div class="search-card-wrapper">
-    <div class="container">
-        <div class="search-card" id="searchCard">
-            <div class="search-header">
-                <div class="search-icon">
-                    <i class="fas fa-train"></i>
-                </div>
-                <div>
-                    <h2 class="search-title">{{ $searchTitle }}</h2>
-                    <p class="search-subtitle">{{ $searchSubtitle }}</p>
-                </div>
-            </div>
-
-            <form id="searchForm">
-                <div class="search-form">
-                    <div class="form-group">
-                        <select class="form-control-floating" id="departure" required>
-                            <option value="" disabled selected></option>
-                            <option value="vientiane">{{ __('Vientiane') }}</option>
-                            <option value="vangvieng">{{ __('Vang Vieng') }}</option>
-                            <option value="luangprabang">{{ __('Luang Prabang') }}</option>
-                            <option value="savannakhet">{{ __('Savannakhet') }}</option>
-                            <option value="pakse">{{ __('Pakse') }}</option>
-                        </select>
-                        <label class="form-label-floating">{{ __('From') }}</label>
-                    </div>
-
-                    <button type="button" class="route-swap" onclick="swapStations()">
-                        <i class="fas fa-exchange-alt"></i>
-                    </button>
-
-                    <div class="form-group">
-                        <select class="form-control-floating" id="destination" required>
-                            <option value="" disabled selected></option>
-                            <option value="vientiane">{{ __('Vientiane') }}</option>
-                            <option value="vangvieng">{{ __('Vang Vieng') }}</option>
-                            <option value="luangprabang">{{ __('Luang Prabang') }}</option>
-                            <option value="savannakhet">{{ __('Savannakhet') }}</option>
-                            <option value="pakse">{{ __('Pakse') }}</option>
-                        </select>
-                        <label class="form-label-floating">{{ __('To') }}</label>
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" class="form-control-floating" id="travel-date" placeholder=" " required
-                            readonly>
-                        <label class="form-label-floating">{{ __('Departure Date') }}</label>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-search-modern">
-                    <i class="fas fa-search"></i>
-                    <span>{{ __('Search Trains') }}</span>
-                </button>
-
-                <div class="trust-indicators">
-                    <div class="trust-item">
-                        <i class="fas fa-check-circle"></i>
-                        <span>{{ __('Instant confirmation') }}</span>
-                    </div>
-                    <div class="trust-item">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>{{ __('Secure booking') }}</span>
-                    </div>
-                    <div class="trust-item">
-                        <i class="fas fa-headset"></i>
-                        <span>{{ __('24/7 support') }}</span>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-@once
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Initialize Flatpickr for date selection
-                const locale = '{{ app()->getLocale() }}';
-
-                const flatpickrConfig = {
-                    minDate: "today",
-                    defaultDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
-                    dateFormat: "Y-m-d",
-                    allowInput: false,
-                    clickOpens: true,
-                    disableMobile: true,
-                };
-
-                flatpickr("#travel-date", flatpickrConfig);
-
-                // Handle floating labels for select elements
-                const selectElements = document.querySelectorAll('.form-control-floating');
-                selectElements.forEach(select => {
-                    if (select.value && select.value !== '') {
-                        select.classList.add('has-value');
-                    }
-
-                    select.addEventListener('change', function() {
-                        if (this.value && this.value !== '') {
-                            this.classList.add('has-value');
-                        } else {
-                            this.classList.remove('has-value');
-                        }
-                    });
-                });
-
-                // Swap stations function
-                window.swapStations = function() {
-                    const departure = document.getElementById('departure');
-                    const destination = document.getElementById('destination');
-
-                    if (departure && destination) {
-                        const temp = departure.value;
-                        departure.value = destination.value;
-                        destination.value = temp;
-
-                        departure.dispatchEvent(new Event('change'));
-                        destination.dispatchEvent(new Event('change'));
-                    }
-                };
-
-                // Form submission handler
-                const searchForm = document.getElementById('searchForm');
-                if (searchForm) {
-                    searchForm.addEventListener('submit', function(event) {
-                        event.preventDefault();
-
-                        const departure = document.getElementById('departure').value;
-                        const destination = document.getElementById('destination').value;
-                        const travelDate = document.getElementById('travel-date').value;
-
-                        if (!departure || !destination || !travelDate) {
-                            alert('{{ __('Please fill in all fields') }}');
-                            return;
-                        }
-
-                        if (departure === destination) {
-                            alert('{{ __('Please select different departure and destination stations') }}');
-                            return;
-                        }
-
-                        // Redirect to ticket list instead of search results
-                        window.location.href =
-                            `/tickets?from=${departure}&to=${destination}&date=${travelDate}`;
-                    });
-                }
-            });
-
-            function handleResponsiveLayout() {
-                const isMobile = window.innerWidth <= 768;
-                const searchButton = document.querySelector('.btn-search-modern');
-                const lastFormGroup = document.querySelector('.search-form .form-group:last-child');
-                const searchForm = document.querySelector('.search-form');
-
-                if (isMobile && searchButton && lastFormGroup) {
-                    lastFormGroup.appendChild(searchButton);
-                } else if (!isMobile && searchButton && searchForm) {
-                    searchForm.appendChild(searchButton);
-                }
-            }
-
-            window.addEventListener('load', handleResponsiveLayout);
-            window.addEventListener('resize', handleResponsiveLayout);
-        </script>
     @endpush
 @endonce

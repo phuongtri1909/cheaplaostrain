@@ -1,80 +1,89 @@
-@props(['searchParams', 'trainsCount' => 0])
+@props(['searchParams', 'trainsCount'])
 
-@once
-    @push('styles')
-        <style>
-            .route-station {
-                font-size: 1.8rem;
-                font-weight: 800;
-                color: var(--text-dark);
-                padding: 0.5rem 1rem;
-                background: var(--gradient-green-soft);
-                border-radius: var(--radius-lg);
-                border: 2px solid var(--accent-green);
-            }
-
-            .route-arrow-animated {
-                color: var(--primary-green);
-                font-size: 2rem;
-                animation: slideArrow 2s ease-in-out infinite;
-            }
-
-            .search-meta {
-                display: flex;
-                justify-content: start;
-                gap: 1rem;
-                align-items: center;
-                flex-wrap: nowrap;
-                flex-direction: row;
-            }
-
-            .meta-item {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                padding: 0.75rem 1.25rem;
-                border-radius: var(--radius-md);
-                border: 1px solid var(--gradient-green-soft);
-                transition: var(--transition-smooth);
-            }
-
-            .meta-item:hover {
-                transform: translateY(-2px);
-            }
-
-            .meta-item i {
-                color: var(--primary-green);
-            }
-
-            .meta-item span {
-                color: var(--text-dark);
-                font-weight: 600;
-            }
-
-            @keyframes slideArrow {
-
-                0%,
-                100% {
-                    transform: translateX(0) scale(1);
-                }
-
-                50% {
-                    transform: translateX(8px) scale(1.1);
-                }
-            }
-        </style>
-    @endpush
-@endonce
-
+@if(isset($trainsCount) && $trainsCount > 0)
 <div class="container">
-    <div class="search-meta">
-        <div class="meta-item">
-            <i class="fas fa-calendar-alt"></i>
-            <span>{{ date('D, M d, Y', strtotime($searchParams['date'] ?? 'tomorrow')) }}</span>
+    <div class="search-summary">
+        <div class="summary-header">
+            <div class="summary-route">
+                <span>{{ $searchParams['departure_name'] ?? 'Unknown' }}</span>
+                <i class="fas fa-arrow-right"></i>
+                <span>{{ $searchParams['arrival_name'] ?? 'Unknown' }}</span>
+            </div>
+            <div class="summary-count">
+                {{ $trainsCount }} {{ __('trains found') }}
+            </div>
         </div>
-        <div class="meta-item">
-            <i class="fas fa-train"></i>
-            <span>{{ $trainsCount }} {{ __('trains available') }}</span>
+        <div class="summary-details">
+            <div class="summary-item">
+                <i class="fas fa-calendar"></i>
+                <span>{{ date('l, F j, Y', strtotime($searchParams['travel_date'])) }}</span>
+            </div>
         </div>
     </div>
 </div>
+@endif
+@push('styles')
+<style>
+    .search-summary {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid #cbd5e1;
+    }
+
+    .summary-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .summary-route {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .summary-route i {
+        color: #10b981;
+    }
+
+    .summary-count {
+        background: #10b981;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .summary-details {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.9rem;
+        color: #6b7280;
+    }
+
+    .summary-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .summary-header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .summary-details {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+</style>
+@endpush

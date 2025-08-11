@@ -10,10 +10,11 @@
                 <div class="card-body pt-4 p-3">
                     @include('admin.pages.components.success-error')
 
-                    <form action="{{ route('admin.trains.update', $train->id) }}" method="POST">
+                    <form action="{{ route('admin.trains.update', $train->id) }}" method="POST" id="trainForm">
                         @csrf
                         @method('PUT')
                         <div class="row">
+                            <!-- Basic Train Info -->
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="train_number" class="form-label">Số hiệu tàu <span class="text-danger">*</span></label>
@@ -68,7 +69,8 @@
                                 <div class="form-group">
                                     <label for="total_seats" class="form-label">Tổng số ghế</label>
                                     <input type="number" name="total_seats" id="total_seats" class="form-control @error('total_seats') is-invalid @enderror"
-                                        value="{{ old('total_seats', $train->total_seats) }}" placeholder="VD: 300" min="1">
+                                        value="{{ old('total_seats', $train->total_seats) }}" placeholder="Để trống để tự động tính" min="1" readonly>
+                                    <small class="text-muted">Sẽ được tính tự động từ tổng ghế các hạng</small>
                                     @error('total_seats')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -77,12 +79,103 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-check mt-4">
-                                    <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1"
-                                        {{ old('is_active', $train->is_active) ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $train->is_active) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="is_active">
                                         Kích hoạt
                                     </label>
                                 </div>
+                            </div>
+
+                            <!-- Seat Classes Configuration -->
+                            <div class="col-md-12">
+                                <hr class="horizontal dark">
+                                <h6 class="mb-3">Cấu hình hạng ghế <span class="text-danger">*</span></h6>
+
+                                <div id="seatClassesContainer">
+                                    @php
+                                        $existingSeatClasses = old('seat_classes',
+                                            $train->trainSeatClasses->map(function($tsc) {
+                                                return [
+                                                    'seat_class_id' => $tsc->seat_class_id,
+                                                    'total_seats' => $tsc->total_seats,
+                                                    'available_seats' => $tsc->available_seats
+                                                ];
+                                            })->toArray()
+                                        );
+                                    @endphp
+
+                                    @if(count($existingSeatClasses) > 0)
+                                        @foreach($existingSeatClasses as $index => $seatClass)
+                                            <div class="seat-class-row mb-3" data-index="{{ $index }}">
+                                                <div class="card border">
+                                                    <div class="card-body p-3">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">Hạng ghế</label>
+                                                                <select name="seat_classes[{{ $index }}][seat_class_id]" class="form-control seat-class-select" required>
+                                                                    <option value="">-- Chọn hạng ghế --</option>
+                                                                    @foreach($seatClasses as $class)
+                                                                        <option value="{{ $class->id }}" {{ $seatClass['seat_class_id'] == $class->id ? 'selected' : '' }}>
+                                                                            {{ $class->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="form-label">Tổng ghế</label>
+                                                                <input type="number" name="seat_classes[{{ $index }}][total_seats]" class="form-control total-seats-input" value="{{ $seatClass['total_seats'] }}" min="1" required>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="form-label">Ghế có sẵn</label>
+                                                                <input type="number" name="seat_classes[{{ $index }}][available_seats]" class="form-control available-seats-input" value="{{ $seatClass['available_seats'] }}" min="0" required>
+                                                            </div>
+                                                            <div class="col-md-2 d-flex align-items-end">
+                                                                <button type="button" class="btn btn-outline-danger btn-sm remove-seat-class">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="seat-class-row mb-3" data-index="0">
+                                            <div class="card border">
+                                                <div class="card-body p-3">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Hạng ghế</label>
+                                                            <select name="seat_classes[0][seat_class_id]" class="form-control seat-class-select" required>
+                                                                <option value="">-- Chọn hạng ghế --</option>
+                                                                @foreach($seatClasses as $class)
+                                                                    <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="form-label">Tổng ghế</label>
+                                                            <input type="number" name="seat_classes[0][total_seats]" class="form-control total-seats-input" min="1" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="form-label">Ghế có sẵn</label>
+                                                            <input type="number" name="seat_classes[0][available_seats]" class="form-control available-seats-input" min="0" required>
+                                                        </div>
+                                                        <div class="col-md-2 d-flex align-items-end">
+                                                            <button type="button" class="btn btn-outline-danger btn-sm remove-seat-class">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <button type="button" id="addSeatClass" class="btn btn-outline-primary btn-sm">
+                                    <i class="fa fa-plus"></i> Thêm hạng ghế
+                                </button>
                             </div>
 
                             <div class="col-md-12 text-center mt-4">
@@ -95,4 +188,123 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let seatClassIndex = {{ count($existingSeatClasses) }};
+        const seatClassesData = @json($seatClasses);
+
+        // Add new seat class row
+        document.getElementById('addSeatClass').addEventListener('click', function() {
+            const container = document.getElementById('seatClassesContainer');
+            const newRow = createSeatClassRow(seatClassIndex);
+            container.appendChild(newRow);
+            seatClassIndex++;
+            updateTotalSeats();
+        });
+
+        // Remove seat class row
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-seat-class')) {
+                const row = e.target.closest('.seat-class-row');
+                if (document.querySelectorAll('.seat-class-row').length > 1) {
+                    row.remove();
+                    updateTotalSeats();
+                } else {
+                    alert('Phải có ít nhất một hạng ghế!');
+                }
+            }
+        });
+
+        // Auto-sync available seats with total seats
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('total-seats-input')) {
+                const row = e.target.closest('.seat-class-row');
+                const availableInput = row.querySelector('.available-seats-input');
+                const totalSeats = parseInt(e.target.value) || 0;
+
+                if (!availableInput.value || parseInt(availableInput.value) > totalSeats) {
+                    availableInput.value = totalSeats;
+                }
+                availableInput.max = totalSeats;
+                updateTotalSeats();
+            }
+
+            if (e.target.classList.contains('available-seats-input')) {
+                const row = e.target.closest('.seat-class-row');
+                const totalInput = row.querySelector('.total-seats-input');
+                const totalSeats = parseInt(totalInput.value) || 0;
+                const availableSeats = parseInt(e.target.value) || 0;
+
+                if (availableSeats > totalSeats) {
+                    e.target.value = totalSeats;
+                    alert('Số ghế có sẵn không được lớn hơn tổng số ghế!');
+                }
+            }
+        });
+
+        // Check for duplicate seat classes
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('seat-class-select')) {
+                const allSelects = document.querySelectorAll('.seat-class-select');
+                const values = Array.from(allSelects).map(s => s.value).filter(v => v);
+                const duplicates = values.filter((v, i) => values.indexOf(v) !== i);
+
+                if (duplicates.length > 0) {
+                    e.target.value = '';
+                    alert('Hạng ghế này đã được chọn!');
+                }
+            }
+        });
+
+        function createSeatClassRow(index) {
+            const div = document.createElement('div');
+            div.className = 'seat-class-row mb-3';
+            div.setAttribute('data-index', index);
+
+            let optionsHTML = '<option value="">-- Chọn hạng ghế --</option>';
+            seatClassesData.forEach(function(seatClass) {
+                optionsHTML += `<option value="${seatClass.id}">${seatClass.name}</option>`;
+            });
+
+            div.innerHTML = `
+                <div class="card border">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Hạng ghế</label>
+                                <select name="seat_classes[${index}][seat_class_id]" class="form-control seat-class-select" required>
+                                    ${optionsHTML}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Tổng ghế</label>
+                                <input type="number" name="seat_classes[${index}][total_seats]" class="form-control total-seats-input" min="1" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Ghế có sẵn</label>
+                                <input type="number" name="seat_classes[${index}][available_seats]" class="form-control available-seats-input" min="0" required>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-seat-class">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        function updateTotalSeats() {
+            const totalInputs = document.querySelectorAll('.total-seats-input');
+            const total = Array.from(totalInputs).reduce((sum, input) => {
+                return sum + (parseInt(input.value) || 0);
+            }, 0);
+            document.getElementById('total_seats').value = total;
+        }
+
+        // Initial calculation
+        updateTotalSeats();
+    </script>
 @endsection

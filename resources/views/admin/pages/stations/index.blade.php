@@ -152,7 +152,7 @@
                             </tbody>
                         </table>
                         <div class="px-3">
-                            {{ $stations->links() }}
+                            {{ $stations->links('components.pagination') }}
                         </div>
                     </div>
                 </div>

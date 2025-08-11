@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SeatClass;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Str;
 
 class SeatClassController extends Controller
 {
@@ -44,25 +47,36 @@ class SeatClassController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
             'sort_order' => 'nullable|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg',
             'is_active' => 'boolean'
         ], [
             'code.required' => 'Mã hạng ghế là bắt buộc',
             'code.unique' => 'Mã hạng ghế đã tồn tại',
             'name.required' => 'Tên hạng ghế là bắt buộc',
             'image.image' => 'File phải là hình ảnh',
-            'image.max' => 'Kích thước ảnh không được vượt quá 2MB',
+            'image.mimes' => 'Chỉ chấp nhận file JPG, JPEG, PNG',
         ]);
 
         try {
             $data = $request->only(['code', 'name', 'description', 'sort_order', 'is_active']);
 
-            // Handle image upload
+            // Handle image upload and conversion to WebP
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads/seat-classes'), $imageName);
-                $data['image'] = 'uploads/seat-classes/' . $imageName;
+                $filename = 'seat-class-' . Str::random(10) . '.webp';
+
+                // Create WebP image with reduced quality
+                $img = Image::make($image);
+                $img->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+
+                // Convert to WebP and save
+                $path = 'public/seat-classes/' . $filename;
+                Storage::put($path, $img->encode('webp', 80));
+
+                $data['image'] = 'seat-classes/' . $filename;
             }
 
             // Auto set sort_order if not provided
@@ -81,7 +95,7 @@ class SeatClassController extends Controller
 
     public function show(SeatClass $seatClass)
     {
-        $seatClass->load(['trainSeatClasses.train', 'segmentPrices']);
+        $seatClass->load(['trainSeatClasses.train']);
         return view('admin.pages.seat-classes.show', compact('seatClass'));
     }
 
@@ -97,30 +111,41 @@ class SeatClassController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
             'sort_order' => 'nullable|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg',
             'is_active' => 'boolean'
         ], [
             'code.required' => 'Mã hạng ghế là bắt buộc',
             'code.unique' => 'Mã hạng ghế đã tồn tại',
             'name.required' => 'Tên hạng ghế là bắt buộc',
             'image.image' => 'File phải là hình ảnh',
-            'image.max' => 'Kích thước ảnh không được vượt quá 2MB',
+            'image.mimes' => 'Chỉ chấp nhận file JPG, JPEG, PNG',
         ]);
 
         try {
             $data = $request->only(['code', 'name', 'description', 'sort_order', 'is_active']);
 
-            // Handle image upload
+            // Handle image upload and conversion to WebP
             if ($request->hasFile('image')) {
                 // Delete old image if exists
-                if ($seatClass->image && file_exists(public_path($seatClass->image))) {
-                    unlink(public_path($seatClass->image));
+                if ($seatClass->image && Storage::exists('public/' . $seatClass->image)) {
+                    Storage::delete('public/' . $seatClass->image);
                 }
 
                 $image = $request->file('image');
-                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads/seat-classes'), $imageName);
-                $data['image'] = 'uploads/seat-classes/' . $imageName;
+                $filename = 'seat-class-' . Str::random(10) . '.webp';
+
+                // Create WebP image with reduced quality
+                $img = Image::make($image);
+                $img->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+
+                // Convert to WebP and save
+                $path = 'public/seat-classes/' . $filename;
+                Storage::put($path, $img->encode('webp', 80));
+
+                $data['image'] = 'seat-classes/' . $filename;
             }
 
             $seatClass->update($data);
@@ -140,14 +165,9 @@ class SeatClassController extends Controller
                     ->with('error', 'Không thể xóa hạng ghế đã được sử dụng trong tàu.');
             }
 
-            if ($seatClass->segmentPrices()->count() > 0) {
-                return redirect()->back()
-                    ->with('error', 'Không thể xóa hạng ghế đã có giá vé.');
-            }
-
-            // Delete image if exists
-            if ($seatClass->image && file_exists(public_path($seatClass->image))) {
-                unlink(public_path($seatClass->image));
+            // Delete image file if exists
+            if ($seatClass->image && Storage::exists('public/' . $seatClass->image)) {
+                Storage::delete('public/' . $seatClass->image);
             }
 
             $seatClass->delete();

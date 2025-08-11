@@ -97,21 +97,6 @@
                             </div>
                         @endif
 
-                        @if($seatClass->segmentPrices->count() > 0)
-                            <div class="mb-3">
-                                <label class="text-uppercase text-secondary text-xs font-weight-bolder">Đoạn tuyến có giá vé</label>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($seatClass->segmentPrices->take(10) as $segmentPrice)
-                                        <span class="badge badge-sm bg-gradient-success me-2 mb-2">
-                                            {{ $segmentPrice->routeSegment->name ?? 'N/A' }}
-                                        </span>
-                                    @endforeach
-                                    @if($seatClass->segmentPrices->count() > 10)
-                                        <span class="text-xs text-secondary">+{{ $seatClass->segmentPrices->count() - 10 }} khác</span>
-                                    @endif
-                                </div>
-                            </div>
-                        @endif
                     @endif
                 </div>
             </div>

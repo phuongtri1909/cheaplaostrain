@@ -89,23 +89,6 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="route_segment_id" class="form-label">Đoạn tuyến</label>
-                                    <select name="route_segment_id" id="route_segment_id" class="form-control @error('route_segment_id') is-invalid @enderror">
-                                        <option value="">-- Chọn đoạn tuyến --</option>
-                                        @foreach($routeSegments as $segment)
-                                            <option value="{{ $segment->id }}" {{ old('route_segment_id', $ticket->route_segment_id) == $segment->id ? 'selected' : '' }}>
-                                                {{ $segment->originStation->name ?? 'N/A' }} → {{ $segment->destinationStation->name ?? 'N/A' }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('route_segment_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
                                     <label for="seat_class_id" class="form-label">Hạng ghế <span class="text-danger">*</span></label>
                                     <select name="seat_class_id" id="seat_class_id" class="form-control @error('seat_class_id') is-invalid @enderror" required>
                                         <option value="">-- Chọn hạng ghế --</option>

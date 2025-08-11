@@ -89,20 +89,7 @@
                                 </div>
                             </div>
                         @endif
-                        @if($ticket->routeSegment)
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="text-uppercase text-secondary text-xs font-weight-bolder">Đoạn tuyến</label>
-                                    <div class="d-flex align-items-center">
-                                        <i class="fa fa-circle text-success me-1" style="font-size: 8px;"></i>
-                                        <span class="text-sm me-2">{{ $ticket->routeSegment->originStation->name ?? 'N/A' }}</span>
-                                        <i class="fa fa-arrow-right mx-2"></i>
-                                        <i class="fa fa-circle text-danger me-1" style="font-size: 8px;"></i>
-                                        <span class="text-sm">{{ $ticket->routeSegment->destinationStation->name ?? 'N/A' }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
+    
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="text-uppercase text-secondary text-xs font-weight-bolder">Giá vé</label>

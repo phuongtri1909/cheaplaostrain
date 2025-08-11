@@ -23,7 +23,6 @@ class Ticket extends Model
         'schedule_id',
         'train_id',
         'route_id',
-        'route_segment_id',
         'seat_class_id',
         'travel_date',
         'passenger_name',

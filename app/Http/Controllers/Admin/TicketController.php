@@ -54,10 +54,9 @@ class TicketController extends Controller
         $schedules = Schedule::with(['train', 'route'])->where('is_active', true)->orderBy('departure_time')->get();
         $trains = Train::where('is_active', true)->orderBy('train_number')->get();
         $routes = Route::where('is_active', true)->orderBy('name')->get();
-        $routeSegments = RouteSegment::with(['originStation', 'destinationStation'])->where('is_active', true)->get();
         $seatClasses = SeatClass::where('is_active', true)->orderBy('sort_order')->get();
 
-        return view('admin.pages.tickets.create', compact('schedules', 'trains', 'routes', 'routeSegments', 'seatClasses'));
+        return view('admin.pages.tickets.create', compact('schedules', 'trains', 'routes', 'seatClasses'));
     }
 
     public function store(Request $request)
@@ -67,7 +66,6 @@ class TicketController extends Controller
             'schedule_id' => 'required|exists:schedules,id',
             'train_id' => 'required|exists:trains,id',
             'route_id' => 'required|exists:routes,id',
-            'route_segment_id' => 'nullable|exists:route_segments,id',
             'seat_class_id' => 'required|exists:seat_classes,id',
             'travel_date' => 'required|date',
             'passenger_name' => 'required|string|max:255',
@@ -115,10 +113,9 @@ class TicketController extends Controller
         $schedules = Schedule::with(['train', 'route'])->where('is_active', true)->orderBy('departure_time')->get();
         $trains = Train::where('is_active', true)->orderBy('train_number')->get();
         $routes = Route::where('is_active', true)->orderBy('name')->get();
-        $routeSegments = RouteSegment::with(['originStation', 'destinationStation'])->where('is_active', true)->get();
         $seatClasses = SeatClass::where('is_active', true)->orderBy('sort_order')->get();
 
-        return view('admin.pages.tickets.edit', compact('ticket', 'schedules', 'trains', 'routes', 'routeSegments', 'seatClasses'));
+        return view('admin.pages.tickets.edit', compact('ticket', 'schedules', 'trains', 'routes', 'seatClasses'));
     }
 
     public function update(Request $request, Ticket $ticket)
@@ -128,7 +125,6 @@ class TicketController extends Controller
             'schedule_id' => 'required|exists:schedules,id',
             'train_id' => 'required|exists:trains,id',
             'route_id' => 'required|exists:routes,id',
-            'route_segment_id' => 'nullable|exists:route_segments,id',
             'seat_class_id' => 'required|exists:seat_classes,id',
             'travel_date' => 'required|date',
             'passenger_name' => 'required|string|max:255',
